@@ -3,7 +3,47 @@ import bcrypt from 'bcrypt';
 import validator from "validator";
 import jwt from 'jsonwebtoken';
 
+//Login User
 
+const LoginUser = async (req, res) => {
+   console.log("RAW BODY:", req.body); // debug
+  const { email, password } = req.body;
+  console.log("Enter the email and password",req.body);
+  
+  try {
+    //check if user is exist
+    const user = await userModel.findOne({ email });
+    console.log("Enter the email",user);
+
+    if (!user) 
+      {
+        return res.json({ "success": false, "message": "user not registered ,please register first to login"})
+       }
+    else 
+     {
+      //password matching
+      const isMatch = await bcrypt.compare(password, user.password);
+
+      if (!isMatch)
+         {
+           return res.json({ success: false, message: "Invalid Credential" })
+
+         }
+
+           const token = createToken(user._id) 
+           console.log(token);
+           res.json({ "success": true, "message": "user register successfully", "token": token });
+      
+        }
+               
+         }
+    catch (error)
+     {
+       console.log(error);
+        res.json({ "success": false, "message": " server error" })
+     }
+
+};
 
 
 const createToken = (id) =>{
@@ -53,45 +93,7 @@ const registerUser = async (req, res) => {
      }
 
 };
-//Login User
 
-const LoginUser = async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    //check if user is exist
-    const user = await userModel.findOne({ email });
-    console.log(user);
-
-    if (!user) 
-      {
-        return res.json({ "success": false, "message": "user not registered ,please register first to login" })
-       }
-    else 
-     {
-      //password matching
-      const isMatch = await bcrypt.compare(password, user.password);
-
-      if (!isMatch)
-         {
-           return res.json({ success: false, message: "Invalid Credential" })
-
-         }
-
-           const token = createToken(user._id) 
-           console.log(token);
-           res.json({ "success": true, "message": "user register successfully", "token": token });
-    
-   
-        }
-               
-         }
-    catch (error)
-     {
-       console.log(error);
-        res.json({ "success": false, "message": "some error occured" })
-     }
-
-};
 
  
 export { registerUser, LoginUser };
