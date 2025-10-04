@@ -12,9 +12,12 @@ import orderRouter from './Routes/orderRoute.js';
 // app config
 const app = express();
 app.use(express.json());
-const port = 4000;
+
+const port = process.env.PORT ||  4000;
 // middleware
-const allowedOrigins = ["http://localhost:5173", "http://localhost:5174"];
+const allowedOrigins = ["http://localhost:5173", "http://localhost:5174","https://front-end-project2-neon.vercel.app"];
+//const allowedOrigins = ["https://frontend-project-8qsv.onrender.com"];
+
 app.use(cors({
   origin: allowedOrigins,
   credentials: true,
@@ -28,7 +31,13 @@ connectDB();
 
 //api end point
 
+
 app.use('/api/food',foodRouter);
+// CORS for image routes
+//app.options('/images/*', cors());  // Handles preflight for images
+//app.use('/images', cors(), express.static('uploads'));
+
+
 app.use("/images",express.static("uploads"));
 app.use('/api/user',userRouter);
 app.use("/api/cart", cartRouter);
