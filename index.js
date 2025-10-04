@@ -12,8 +12,7 @@ import orderRouter from './Routes/orderRoute.js';
 // app config
 const app = express();
 app.use(express.json());
-
-const port = process.env.PORT ||  4000;
+const port = 4000;
 // middleware
 const allowedOrigins = ["http://localhost:5173", "http://localhost:5174","https://front-end-project2-neon.vercel.app"];
 //const allowedOrigins = ["https://frontend-project-8qsv.onrender.com"];
